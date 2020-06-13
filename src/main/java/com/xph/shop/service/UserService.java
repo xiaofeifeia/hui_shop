@@ -1,32 +1,66 @@
 package com.xph.shop.service;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.alibaba.fastjson.JSONObject;
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
-import com.xph.shop.dao.UserMapper;
 import com.xph.shop.entity.User;
+import com.github.pagehelper.PageInfo;
+import java.util.List;
+/****
+ * @Author:shenkunlin
+ * @Description:User业务层接口
+ * @Date 2019/6/14 0:16
+ *****/
+public interface UserService {
 
-@Service
-public class UserService {
+    /***
+     * User多条件分页查询
+     * @param user
+     * @param page
+     * @param size
+     * @return
+     */
+    PageInfo<User> findPage(User user, int page, int size);
 
-	@Autowired
-	private UserMapper userMapper;
+    /***
+     * User分页查询
+     * @param page
+     * @param size
+     * @return
+     */
+    PageInfo<User> findPage(int page, int size);
 
-	public Page<User> getUserList(JSONObject jsobj) {
-		Integer pageSize = jsobj.getInteger("pageSize");
-		Integer pageNum = jsobj.getInteger("pageNum");
-		if (pageSize == null) {
-			pageSize = 20;
-			jsobj.put("pageSize", pageSize);
-		}
-		if (pageNum == null) {
-			pageNum = 1;
-			jsobj.put("pageNum", pageNum);
-		}
-		PageHelper.startPage(pageNum, pageSize);
-		return null;
-	}
+    /***
+     * User多条件搜索方法
+     * @param user
+     * @return
+     */
+    List<User> findList(User user);
+
+    /***
+     * 删除User
+     * @param id
+     */
+    void delete(Integer id);
+
+    /***
+     * 修改User数据
+     * @param user
+     */
+    void update(User user);
+
+    /***
+     * 新增User
+     * @param user
+     */
+    void add(User user);
+
+    /**
+     * 根据ID查询User
+     * @param id
+     * @return
+     */
+     User findById(Integer id);
+
+    /***
+     * 查询所有User
+     * @return
+     */
+    List<User> findAll();
 }
