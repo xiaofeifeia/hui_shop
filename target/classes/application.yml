@@ -10,9 +10,9 @@ spring:
         default-property-inclusion: non_null
     datasource:
         name: test
-        url: jdbc:mysql://10.20.0.182:3306/ad_data?useUnicode=true&characterEncoding=UTF8&serverTimezone=GMT%2B8
-        username: ad_data
-        password: nj=UK89@m_
+        url: jdbc:mysql://localhost:3306/hui_shop?useUnicode=true&characterEncoding=UTF8&serverTimezone=GMT%2B8
+        username: root
+        password: ahui123321
         # 使用druid数据源
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
