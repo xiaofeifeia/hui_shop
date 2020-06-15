@@ -21,13 +21,13 @@ public class MessageException extends RuntimeException {
 		this.message = message;
 	}
 
-	public MessageException(String message, int status) {
+	public MessageException(int status, String message) {
 		super(message);
 		this.message = message;
 		this.status = status;
 	}
 
-	public MessageException(String message, int status, Throwable e) {
+	public MessageException(int status, String message, Throwable e) {
 		super(message, e);
 		this.message = message;
 		this.status = status;

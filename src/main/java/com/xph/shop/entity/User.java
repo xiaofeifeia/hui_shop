@@ -1,11 +1,11 @@
 package com.xph.shop.entity;
 
-import javax.persistence.*;
-
 import java.io.Serializable;
 import java.util.Date;
-import java.lang.String;
-import java.lang.Integer;
+
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 import lombok.Data;
 
@@ -20,7 +20,7 @@ public class User implements Serializable {
 
 	@Id
 	@Column(name = "user_id")
-	private Integer userId;// 用户id
+	private Long userId;// 用户id
 
 	@Column(name = "username")
 	private String username;// 用户名
@@ -32,7 +32,7 @@ public class User implements Serializable {
 	private String password;// 密码
 
 	@Column(name = "source_type")
-	private String sourceType;// 0后台创建 1:微信小程序，2:PC，3：H5，4：Android，5：IOS
+	private Byte sourceType;// 0后台创建 1:微信小程序，2:PC，3：H5，4：Android，5：IOS
 
 	@Column(name = "email")
 	private String email;// 邮箱
@@ -41,7 +41,7 @@ public class User implements Serializable {
 	private String headPic;// 头像
 
 	@Column(name = "sex")
-	private String sex;// 性别 0 默认0未知 1 男 2 女
+	private Byte sex;// 性别 0 默认0未知 1 男 2 女
 
 	@Column(name = "phone")
 	private String phone;// 手机号码
@@ -50,7 +50,7 @@ public class User implements Serializable {
 	private String birthday;// 生日
 
 	@Column(name = "status")
-	private String status;// 0 正常 1 禁用 2删除
+	private Byte status;// 0 正常 1 禁用 2删除
 
 	@Column(name = "create_time")
 	private Date createTime;// 创建时间

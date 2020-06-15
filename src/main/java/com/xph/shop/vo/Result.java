@@ -69,6 +69,12 @@ public class Result implements Serializable {
 		result.setMessage(message);
 		return result;
 	}
+	
+	public static Result success(Object data) {
+		Result result = new Result(StatusCode.SUCCESS);
+		result.setData(data);
+		return result;
+	}
 
 	public static Result error() {
 		return new Result(StatusCode.ERROR);

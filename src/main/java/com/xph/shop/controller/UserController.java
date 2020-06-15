@@ -2,13 +2,15 @@ package com.xph.shop.controller;
 
 import java.util.List;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.pagehelper.PageInfo;
 import com.xph.shop.entity.User;
 import com.xph.shop.service.UserService;
+import com.xph.shop.utils.Constants;
 import com.xph.shop.vo.Result;
 
 /****
@@ -82,8 +85,8 @@ public class UserController {
 	 * @param id
 	 * @return
 	 */
-	@DeleteMapping(value = "/{id}")
-	public Result delete(@PathVariable Integer id) {
+	@PostMapping(value = "delete/{id}")
+	public Result delete(@PathVariable Long id) {
 		// 调用UserService实现根据主键删除
 		userService.delete(id);
 		return Result.success();
@@ -96,10 +99,8 @@ public class UserController {
 	 * @param id
 	 * @return
 	 */
-	@PutMapping(value = "/{id}")
-	public Result update(@RequestBody User user, @PathVariable Integer id) {
-		// 设置主键值
-		user.setUserId(id);
+	@PostMapping(value = "update")
+	public Result update(@RequestBody User user) {
 		// 调用UserService实现修改User
 		userService.update(user);
 		return Result.success();
@@ -111,7 +112,7 @@ public class UserController {
 	 * @param user
 	 * @return
 	 */
-	@PostMapping
+	@PostMapping("/add")
 	public Result add(@RequestBody User user) {
 		// 调用UserService实现添加User
 		userService.add(user);
@@ -125,7 +126,7 @@ public class UserController {
 	 * @return
 	 */
 	@GetMapping("/{id}")
-	public Result findById(@PathVariable Integer id) {
+	public Result findById(@PathVariable Long id) {
 		// 调用UserService实现根据主键查询User
 		User user = userService.findById(id);
 		return Result.build(user);
@@ -136,10 +137,30 @@ public class UserController {
 	 * 
 	 * @return
 	 */
-	@GetMapping
+	@GetMapping("findAll")
 	public Result findAll() {
 		// 调用UserService实现查询所有User
 		List<User> list = userService.findAll();
 		return Result.build(list);
+	}
+	/**
+	 * 用户登录
+	 * @param username
+	 * @param password
+	 * @param response
+	 * @return
+	 */
+	@PostMapping("login")
+	public Result login(@RequestBody User user,HttpServletResponse response){
+		String token = userService.login(user.getUsername(),user.getPassword());
+		if(StringUtils.isNotBlank(token)){
+			//写入coolie
+		    Cookie cookie=new Cookie(Constants.Authorization,token);
+		    cookie.setDomain("localhost");
+		    cookie.setPath("/");
+		    response.addCookie(cookie);
+		    return Result.build(token);
+		}
+		return Result.error("登录失败");
 	}
 }

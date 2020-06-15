@@ -661,7 +661,7 @@ public class BCrypt {
 		char minor = (char)0;
 		int rounds, off = 0;
 		StringBuffer rs = new StringBuffer();
-
+		
 		if (salt.charAt(0) != '$' || salt.charAt(1) != '2') {
 			throw new IllegalArgumentException("Invalid salt version");
 		}
@@ -788,5 +788,9 @@ public class BCrypt {
 			ret |= hashed_bytes[i] ^ try_bytes[i];
 		}
 		return ret == 0;
+	}
+	public static void main(String[] args) {
+		String hashpw = hashpw("admin123", gensalt());
+		System.out.println(hashpw);
 	}
 }

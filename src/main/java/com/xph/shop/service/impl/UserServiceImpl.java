@@ -1,14 +1,26 @@
 package com.xph.shop.service.impl;
-import com.xph.shop.dao.UserMapper;
-import com.xph.shop.entity.User;
-import com.xph.shop.service.UserService;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
 import tk.mybatis.mapper.entity.Example;
-import java.util.List;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.xph.shop.dao.UserMapper;
+import com.xph.shop.entity.User;
+import com.xph.shop.exception.MessageException;
+import com.xph.shop.service.UserService;
+import com.xph.shop.utils.BCrypt;
+import com.xph.shop.utils.Constants;
+import com.xph.shop.utils.JwtUtil;
+import com.xph.shop.vo.StatusCode;
 /****
  * @Author:shenkunlin
  * @Description:User业务层接口实现类
@@ -140,7 +152,11 @@ public class UserServiceImpl implements UserService {
      * @param id
      */
     @Override
-    public void delete(Integer id){
+    public void delete(Long id){
+    	User findById = findById(id);
+    	if(findById==null){
+    		throw new MessageException(StatusCode.USER_NOT_FOUND);
+    	}
         userMapper.deleteByPrimaryKey(id);
     }
 
@@ -150,7 +166,19 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void update(User user){
-        userMapper.updateByPrimaryKey(user);
+    	if(org.apache.commons.lang3.StringUtils.isAnyBlank(user.getUsername(),user.getPassword())||user.getUserId()==null){
+    		throw new MessageException(StatusCode.PARAM_ERROR);
+    	}
+    	User findById = findById(user.getUserId());
+    	if(findById==null){
+    		throw new MessageException(StatusCode.USER_NOT_FOUND);
+    	}
+    	BeanUtils.copyProperties(user, findById);
+    	//对密码加密
+    	String bcryptPwd = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+    	findById.setPassword(bcryptPwd);
+    	findById.setUpdateTime(new Date());
+        userMapper.updateByPrimaryKeySelective(findById);
     }
 
     /**
@@ -159,7 +187,14 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void add(User user){
-        userMapper.insert(user);
+    	if(org.apache.commons.lang3.StringUtils.isAnyBlank(user.getUsername(),user.getPassword())){
+    		throw new MessageException(StatusCode.PARAM_ERROR);
+    	}
+    	//对密码加密
+    	String bcryptPwd = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+    	user.setPassword(bcryptPwd);
+    	user.setCreateTime(new Date());
+        userMapper.insertSelective(user);
     }
 
     /**
@@ -168,7 +203,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public User findById(Integer id){
+    public User findById(Long id){
         return  userMapper.selectByPrimaryKey(id);
     }
 
@@ -180,4 +215,32 @@ public class UserServiceImpl implements UserService {
     public List<User> findAll() {
         return userMapper.selectAll();
     }
+
+	@Override
+	public String login(String username, String password) {
+		Example example=new Example(User.class);
+		example.createCriteria().andCondition(" phone='"+username+"' or username='"+username+"'");
+		List<User> list = userMapper.selectByExample(example);
+		if(list==null || list.size()<=0){
+		   throw new MessageException(StatusCode.USER_NOT_FOUND.getStatus(),username+","+StatusCode.USER_NOT_FOUND.getMessage());
+		}
+		User user = list.get(0);
+		//密码错误
+		if(!BCrypt.checkpw(password,user.getPassword())){
+			 throw new MessageException(StatusCode.USER_PASSWORD_ERROR);
+		}
+	    User user2=new User();
+	    user2.setUserId(user.getUserId());
+	    user2.setLastLoginTime(new Date());
+	    userMapper.updateByPrimaryKeySelective(user2);
+	    JSONObject userData=new JSONObject();
+	    userData.put("userId", user.getUserId());
+	    userData.put("userName", user.getUsername());
+	    userData.put("email", user.getEmail());
+	    //创建jwt
+	    String token = JwtUtil.createJWT(Constants.uuid, JSON.toJSONString(userData), null);
+	    return token;
+	}
+    
+    
 }
