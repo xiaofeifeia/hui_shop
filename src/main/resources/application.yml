@@ -114,5 +114,8 @@ management:
   security:
     enabled: false
 
+upload: 
+  file:
+    path: D:\\Java\\workspace_x\\upload\\file
 
 

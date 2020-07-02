@@ -16,11 +16,12 @@ public interface UserService {
 	 * User多条件分页查询
 	 * 
 	 * @param user
+	 * @param statusList 状态，多个逗号隔开
 	 * @param page
 	 * @param size
 	 * @return
 	 */
-	PageInfo<User> findPage(User user, int page, int size);
+	PageInfo<User> findPage(User user, String statusList, int page, int size);
 
 	/***
 	 * User分页查询
@@ -82,4 +83,15 @@ public interface UserService {
 	 * @param password
 	 */
 	String login(String username, String password);
+
+	/**
+	 * 重置密码
+	 * @param userId
+	 */
+	void resetPwd(Long userId);
+	/**
+	 * 批量删除
+	 * @param userIds
+	 */
+	void deleleUsers(List<Long> userIds);
 }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xph.shop.dao.SpecMapper">
+<select id="findPage" parameterType="com.xph.shop.vo.SpecVo" resultType="com.xph.shop.vo.SpecVo">
+  select sp.*,sp.template_id templateId,t.name templateName from tb_spec sp left join tb_template t on sp.template_id=t.id
+  <where>
+    <if test="name!=null and name!=''">
+      and sp.name like '%${name}%'
+    </if>
+    <if test="templateName!=null and templateName!=''">
+      and t.name like '%${templateName}%'
+    </if>
+    <if test="templateId!=null ">
+      and sp.template_id=#{templateId}
+    </if>
+  </where>
+    order by sp.createdate desc ,sp.updatedate desc
+</select>
+</mapper>

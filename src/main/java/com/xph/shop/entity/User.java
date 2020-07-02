@@ -41,7 +41,7 @@ public class User implements Serializable {
 	private String headPic;// 头像
 
 	@Column(name = "sex")
-	private Byte sex;// 性别 0 默认0未知 1 男 2 女
+	private Integer sex;// 性别 0 默认0未知 1 男 2 女
 
 	@Column(name = "phone")
 	private String phone;// 手机号码
@@ -49,14 +49,17 @@ public class User implements Serializable {
 	@Column(name = "birthday")
 	private String birthday;// 生日
 
+	@Column(name = "address")
+	private String address;// 地址
+
 	@Column(name = "status")
-	private Byte status;// 0 正常 1 禁用 2删除
+	private Integer status;// 0 正常 1 禁用 2删除
 
-	@Column(name = "create_time")
-	private Date createTime;// 创建时间
+	@Column(name = "createdate")
+	private Date createDate;// 创建时间
 
-	@Column(name = "update_time")
-	private Date updateTime;// 更新时间
+	@Column(name = "updatedate")
+	private Date updateDate;// 更新时间
 
 	@Column(name = "last_login_time")
 	private Date lastLoginTime;// 最后登录时间

@@ -7,7 +7,7 @@ spring:
     jackson:
         date-format: yyyy-MM-dd HH:mm:ss
         time-zone: GMT+8
-        default-property-inclusion: non_null
+        default-property-inclusion: NON_NULL
     datasource:
         name: test
         url: jdbc:mysql://localhost:3306/hui_shop?useUnicode=true&characterEncoding=UTF8&serverTimezone=GMT%2B8
@@ -114,5 +114,8 @@ management:
   security:
     enabled: false
 
+upload: 
+  file:
+    path: D:\\Java\\workspace_x\\upload\\file
 
 

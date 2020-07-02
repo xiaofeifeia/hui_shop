@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.xph.shop.entity.User;
 import com.xph.shop.service.UserService;
@@ -42,27 +43,13 @@ public class UserController {
 	 * @param size
 	 * @return
 	 */
-	@PostMapping(value = "/search/{page}/{size}")
-	public Result findPage(@RequestBody(required = false) User user,
-			@PathVariable int page, @PathVariable int size) {
+	@PostMapping(value = "/findPage/{pageNum}/{pageSize}")
+	public Result findPage(@RequestBody(required = false) String json,
+			@PathVariable int pageNum, @PathVariable int pageSize) {
 		// 调用UserService实现分页条件查询User
-		PageInfo<User> pageInfo = userService.findPage(user, page, size);
-		return Result.build(pageInfo);
-	}
-
-	/***
-	 * User分页搜索实现
-	 * 
-	 * @param page
-	 *            :当前页
-	 * @param size
-	 *            :每页显示多少条
-	 * @return
-	 */
-	@GetMapping(value = "/search/{page}/{size}")
-	public Result findPage(@PathVariable int page, @PathVariable int size) {
-		// 调用UserService实现分页查询User
-		PageInfo<User> pageInfo = userService.findPage(page, size);
+		User user = JSON.parseObject(json, User.class);
+		String statusList=JSON.parseObject(json).getString("statusList");
+		PageInfo<User> pageInfo = userService.findPage(user,statusList, pageNum, pageSize);
 		return Result.build(pageInfo);
 	}
 
@@ -125,7 +112,7 @@ public class UserController {
 	 * @param id
 	 * @return
 	 */
-	@GetMapping("/{id}")
+	@GetMapping("/findById/{id}")
 	public Result findById(@PathVariable Long id) {
 		// 调用UserService实现根据主键查询User
 		User user = userService.findById(id);
@@ -162,5 +149,27 @@ public class UserController {
 		    return Result.build(token);
 		}
 		return Result.error("登录失败");
+	}
+	
+	/***
+	 * 查询User全部数据
+	 * 
+	 * @return
+	 */
+	@PostMapping("resetPwd/{userId}")
+	public Result resetPwd(@PathVariable Long userId) {
+		 userService.resetPwd(userId);
+		return Result.success();
+	}
+	
+	/***
+	 *  删除多个用户
+	 * 
+	 * @return
+	 */
+	@PostMapping("deleteUsers")
+	public Result deleteUsers(@RequestBody List<Long> userIds) {
+		userService.deleleUsers(userIds);
+		return Result.success();
 	}
 }

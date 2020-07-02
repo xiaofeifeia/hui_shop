@@ -8,4 +8,5 @@ public class Constants {
 
 	public static final String uuid=UUID.randomUUID().toString().replaceAll("-",StringUtils.EMPTY);
 	public static final String Authorization="Authorization";
+	public static final String INIT_PASSWORD="123456";
 }
