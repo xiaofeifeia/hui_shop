@@ -1,4 +1,7 @@
 /target/
 /src/test/
 /target/classes/
-
+.idea
+.classpath
+.project
+hui_shop.iml
