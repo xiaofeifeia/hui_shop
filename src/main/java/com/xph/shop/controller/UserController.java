@@ -132,8 +132,7 @@ public class UserController {
 	}
 	/**
 	 * 用户登录
-	 * @param username
-	 * @param password
+	 * @param user
 	 * @param response
 	 * @return
 	 */
