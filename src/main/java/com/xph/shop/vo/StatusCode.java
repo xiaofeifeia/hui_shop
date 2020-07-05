@@ -17,12 +17,15 @@ public enum StatusCode {
     //用户
     USER_NOT_FOUND(20100,"用户不存在"),
     USER_PASSWORD_ERROR(20101,"密码错误"),
+    USER_NOT_LOGIN(20103,"用户未登录"),
+    USER_LOGIN_INFO_ERROR(20104,"获取登录用户信息失败"),
+
     
     BRAND_NOT_FOUND(20200,"品牌不存在"),
     
     CATEGORY_NOT_FOUND(20300,"分类不存在"),
     
-    SKU_NOT_FOUND(20400,"商品不存在"),
+    SPU_NOT_FOUND(20400,"商品不存在"),
 
     ;
     

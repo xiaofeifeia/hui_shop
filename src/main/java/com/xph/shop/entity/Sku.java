@@ -57,9 +57,6 @@ public class Sku implements Serializable{
 
     @Column(name = "category_name")
 	private String categoryName;//类目名称
-    
-    @Column(name = "brand_id")
-    private Integer brandId;//品牌id
 
     @Column(name = "brand_name")
 	private String brandName;//品牌名称

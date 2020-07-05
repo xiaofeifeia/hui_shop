@@ -10,11 +10,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
+import com.xph.shop.entity.Sku;
 import com.xph.shop.service.GoodsService;
 import com.xph.shop.vo.Goods;
 import com.xph.shop.vo.Result;
-import com.xph.shop.vo.SkuVo;
+import com.xph.shop.vo.SpuVo;
 
 @RestController
 @RequestMapping("/goods")
@@ -33,34 +37,105 @@ public class GoodsController {
 	 * @return
 	 */
 	@PostMapping(value = "/findPage/{page}/{size}")
-	public Result findPage(@RequestBody(required = false) SkuVo skuVo,
+	public Result findPage(@RequestBody(required = false) SpuVo spuVo,
 			@PathVariable int page, @PathVariable int size) {
 		// 调用CategoryService实现分页条件查询Category
-		PageInfo<SkuVo> pageInfo = goodsService.findPage(skuVo, page, size);
+		PageInfo<SpuVo> pageInfo = goodsService.findPage(spuVo, page, size);
 		return Result.build(pageInfo);
 	}
 
-	@PostMapping("create")
-	public Result create(@RequestBody Goods goods) {
-		goodsService.create(goods);
+	/**
+	 * 创建或者修改
+	 * 
+	 * @param json
+	 * @return
+	 */
+	@PostMapping("createOrUpdate")
+	public Result createOrUpdate(@RequestBody String json) {
+		JSONObject jsobj = JSON.parseObject(json);
+		String spuStr = jsobj.getString("spu");
+		SpuVo spu = JSON.parseObject(spuStr, SpuVo.class);
+		if (spu != null) {
+			spu.setSpecItems(JSON.parseObject(spuStr).getString("specItems"));
+			spu.setParaItems(JSON.parseObject(spuStr).getString("paraItems"));
+		}
+		String skusStr = jsobj.getString("skus");
+		List<Sku> skus = JSON.parseArray(skusStr, Sku.class);
+		JSONArray parseArray = JSON.parseArray(skusStr);
+		if (skus != null && skus.size() > 0) {
+			for (int i = 0; i < skus.size(); i++) {
+				skus.get(i).setSpec(
+						parseArray.getJSONObject(i).getString("spec"));
+			}
+		}
+		Goods goods = new Goods();
+		goods.setSpu(spu);
+		goods.setSkus(skus);
+		goodsService.createOrUpdate(goods);
 		return Result.success();
 	}
 
-	@PostMapping("updateStatus/{id}")
-	public Result updateStatus(@PathVariable String id, String status) {
-		goodsService.updateStatus(id, status);
+	/**
+	 * 上架下架
+	 * 
+	 * @param id
+	 * @param isMarketable
+	 * @return
+	 */
+	@PostMapping("setMarketable/{id}")
+	public Result setMarketable(@PathVariable String id, String isMarketable) {
+		goodsService.setMarketable(id, isMarketable);
 		return Result.success();
 	}
 
+	/**
+	 * 删除
+	 * 
+	 * @param id
+	 * @return
+	 */
 	@PostMapping("deleteGoods/{id}")
 	public Result deleteGoods(@PathVariable String id) {
-		goodsService.updateStatus(id, "3");
+		goodsService.deleteGoods(id);
 		return Result.success();
 	}
 
+	/**
+	 * 批量删除
+	 * 
+	 * @param ids
+	 * @return
+	 */
 	@PostMapping("deleteGoodsList")
 	public Result deleteGoodsList(@RequestBody List<String> ids) {
-		goodsService.updateStatus(ids, "3");
+		goodsService.deleteGoodsList(ids);
 		return Result.success();
+	}
+
+	/**
+	 * 审核
+	 * 
+	 * @param id
+	 * @param auditStatus
+	 * @param auditInfo
+	 * @return
+	 */
+	@PostMapping("audit/{id}")
+	public Result audit(@PathVariable String id, Integer auditStatus,
+			String auditInfo) {
+		goodsService.audit(id, auditStatus, auditInfo);
+		return Result.success();
+	}
+
+	/**
+	 * 获取商品详情
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@PostMapping("getGoodsInfo/{id}")
+	public Result getGoodsInfo(@PathVariable String id) {
+		Goods goods = goodsService.getGoodsInfo(id);
+		return Result.build(goods);
 	}
 }

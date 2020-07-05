@@ -2,9 +2,10 @@ package com.xph.shop.dao;
 
 import java.util.List;
 
-import com.xph.shop.vo.SkuVo;
+import com.xph.shop.entity.Spu;
+import com.xph.shop.vo.SpuVo;
 
 public interface GoodsMapper {
 
-	public List<SkuVo> findPage(SkuVo skuVo);
+	public List<SpuVo> findPage(Spu spu);
 }

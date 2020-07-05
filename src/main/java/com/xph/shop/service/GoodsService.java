@@ -4,16 +4,16 @@ import java.util.List;
 
 import com.github.pagehelper.PageInfo;
 import com.xph.shop.vo.Goods;
-import com.xph.shop.vo.SkuVo;
+import com.xph.shop.vo.SpuVo;
 
 public interface GoodsService {
 
 	/**
-	 * 创建商品
+	 * 创建修改商品
 	 * 
 	 * @param goods
 	 */
-	public void create(Goods goods);
+	public void createOrUpdate(Goods goods);
 
 	/**
 	 * sku商品信息
@@ -23,19 +23,43 @@ public interface GoodsService {
 	 * @param size
 	 * @return
 	 */
-	public PageInfo<SkuVo> findPage(SkuVo skuVo, int page, int size);
+	public PageInfo<SpuVo> findPage(SpuVo spuVo, int page, int size);
 
 	/**
-	 * 更新状态
+	 * 删除
+	 * 
 	 * @param id
-	 * @param status
 	 */
-	public void updateStatus(String id, String status);
-	
+	public void deleteGoods(String id);
+
 	/**
-	 * 更新状态
+	 * 批量删除
+	 * 
 	 * @param ids
-	 * @param status
 	 */
-	public void updateStatus(List<String> ids, String status);
+	public void deleteGoodsList(List<String> ids);
+
+	/**
+	 * 上架下架
+	 * 
+	 * @param id
+	 * @param isMarketable
+	 */
+	public void setMarketable(String id, String isMarketable);
+
+	/**
+	 * 审核
+	 * 
+	 * @param id
+	 * @param auditStatus
+	 */
+	public void audit(String id, Integer auditStatus, String auditInfo);
+
+	/**
+	 * 获取商品信息
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public Goods getGoodsInfo(String id);
 }
