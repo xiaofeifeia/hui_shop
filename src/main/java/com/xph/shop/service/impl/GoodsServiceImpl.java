@@ -173,9 +173,14 @@ public class GoodsServiceImpl implements GoodsService {
 		if (spu == null) {
 			throw new MessageException(StatusCode.SPU_NOT_FOUND);
 		}
-
+		spu=new Spu();
+		spu.setId(id);
 		spu.setAuditStatus(auditStatus);
-		spu.setAuditUser(UserUtil.getLoginUser().getUserId());
+		try {
+			spu.setAuditUser(UserUtil.getLoginUser().getUserId());
+		} catch (Exception e) {
+			spu.setAuditUser(1L);
+		}
 		spu.setAuditInfo(auditInfo);
 		spu.setAuditDate(new Date());
 		spuMapper.updateByPrimaryKeySelective(spu);
@@ -207,6 +212,8 @@ public class GoodsServiceImpl implements GoodsService {
 		if (c3 != null) {
 			spuVo.setCategoryName3(c3.getName());
 		}
+		Brand brand = brandService.findById(spu.getBrandId());
+        spuVo.setBrandName(brand.getName());
 		goods.setSpu(spuVo);
 		return goods;
 	}

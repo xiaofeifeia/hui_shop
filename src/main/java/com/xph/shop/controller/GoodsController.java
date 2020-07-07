@@ -15,6 +15,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.xph.shop.entity.Sku;
+import com.xph.shop.entity.Spu;
 import com.xph.shop.service.GoodsService;
 import com.xph.shop.vo.Goods;
 import com.xph.shop.vo.Result;
@@ -120,10 +121,9 @@ public class GoodsController {
 	 * @param auditInfo
 	 * @return
 	 */
-	@PostMapping("audit/{id}")
-	public Result audit(@PathVariable String id, Integer auditStatus,
-			String auditInfo) {
-		goodsService.audit(id, auditStatus, auditInfo);
+	@PostMapping("audit")
+	public Result audit(@RequestBody Spu spu) {
+		goodsService.audit(spu.getId(), spu.getAuditStatus(), spu.getAuditInfo());
 		return Result.success();
 	}
 
