@@ -26,6 +26,8 @@ public enum StatusCode {
     CATEGORY_NOT_FOUND(20300,"分类不存在"),
     
     SPU_NOT_FOUND(20400,"商品不存在"),
+    
+    STORE_NOT_FOUND(20500,"门店不存在"),
 
     ;
     
