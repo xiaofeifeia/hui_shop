@@ -27,6 +27,9 @@ public class Sku implements Serializable{
 
     @Column(name = "price")
 	private Integer price;//价格（分）
+    
+    @Column(name = "old_price")
+    private Integer oldPrice;//旧的价格
 
     @Column(name = "num")
 	private Integer num;//库存数量

@@ -31,6 +31,7 @@ import com.xph.shop.service.CategoryService;
 import com.xph.shop.service.GoodsService;
 import com.xph.shop.utils.UserUtil;
 import com.xph.shop.vo.Goods;
+import com.xph.shop.vo.GoodsEs;
 import com.xph.shop.vo.IdWorker;
 import com.xph.shop.vo.SpuVo;
 import com.xph.shop.vo.StatusCode;
@@ -218,4 +219,11 @@ public class GoodsServiceImpl implements GoodsService {
 		return goods;
 	}
 
+	@Override
+	public List<GoodsEs> getGoodsList() {
+		
+		return goodsMapper.getGoodsList();
+	}
+
+	
 }
