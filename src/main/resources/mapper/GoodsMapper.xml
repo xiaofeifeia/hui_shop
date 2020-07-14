@@ -15,4 +15,18 @@
   </where>
     order by s.createdate desc ,s.updatedate desc
 </select>
+
+<select id="getGoodsList" resultType="com.xph.shop.vo.GoodsEs">
+  select s.id,s.sn,s.name,s.price,s.old_price oldPrice,
+  s.num,s.alert_num alertNum,s.image,s.images,s.weight,
+  s.create_time createTime,s.update_time updateTime,
+  s.brand_id brandId,sp.is_marketable isMarketable,sp.category1_id category1Id,
+  sp.category2_id category2Id,sp.category3_id category3Id,s.spec,sp.introduction,
+  sp.audit_status auditStatus,s.sale_num saleNum,s.comment_num commentNum,s.status,s.version
+  from tb_sku s join tb_spu sp on s.spu_id=sp.id
+  <where>
+    and sp.is_delete ='0' and sp.is_marketable='1'
+  </where>
+    order by s.update_time desc ,s.update_time desc
+</select>
 </mapper>

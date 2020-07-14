@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.github.pagehelper.PageInfo;
 import com.xph.shop.vo.Goods;
+import com.xph.shop.vo.GoodsEs;
 import com.xph.shop.vo.SpuVo;
 
 public interface GoodsService {
@@ -62,4 +63,10 @@ public interface GoodsService {
 	 * @return
 	 */
 	public Goods getGoodsInfo(String id);
+	
+	/**
+	 * 获取商品列表
+	 * @return
+	 */
+	public List<GoodsEs> getGoodsList();
 }
