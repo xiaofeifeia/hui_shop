@@ -85,6 +85,7 @@ canal:
       example:
         host: 127.0.0.1
         port: 11111
+        batchSize: 1000
     
 # 必须配置
 feign:
