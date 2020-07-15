@@ -79,6 +79,18 @@ shop:
   elasticsearch:
     hostlist: ${eshostlist:127.0.0.1:9200} #多个结点中间用逗号分隔
 
+shop:
+  elasticsearch:
+    hostlist: ${eshostlist:127.0.0.1:9200} #多个结点中间用逗号分隔
+    
+canal:
+  client:
+    instances:
+      example:
+        host: 127.0.0.1
+        port: 11111
+        batchSize: 1000
+    
 # 必须配置
 feign:
   httpclient:

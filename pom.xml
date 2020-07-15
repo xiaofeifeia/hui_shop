@@ -239,6 +239,19 @@
 			<artifactId>elasticsearch</artifactId>
 		</dependency>
 
+		<!--canal依赖 -->
+		<dependency>
+			<groupId>com.xpand</groupId>
+			<artifactId>starter-canal</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.alibaba.otter</groupId>
+			<artifactId>canal.client</artifactId>
+			<version>1.1.2</version>
+		</dependency>
+
 	</dependencies>
 
 

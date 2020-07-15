@@ -1,4 +1,4 @@
-package com.xph.shop.es;
+package com.xph.shop.es.controller;
 
 import java.io.IOException;
 

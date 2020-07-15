@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import tk.mybatis.spring.annotation.MapperScan;
 
+import com.xpand.starter.canal.annotation.EnableCanalClient;
+
 @MapperScan("com.xph.shop.dao")
 @EnableDiscoveryClient
 @SpringBootApplication
@@ -17,6 +19,7 @@ import tk.mybatis.spring.annotation.MapperScan;
 @EnableScheduling
 @EnableTransactionManagement
 @EnableFeignClients
+@EnableCanalClient
 public class ShopApplication {
 
 	public static void main(String[] args) {
