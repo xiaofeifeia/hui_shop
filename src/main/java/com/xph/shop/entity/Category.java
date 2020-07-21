@@ -24,6 +24,12 @@ public class Category implements Serializable {
 
 	@Column(name = "name")
 	private String name;// 分类名称
+	
+	@Column(name = "caption")
+	private String caption;// 副名称
+	
+	@Column(name = "image")
+	private String image;// 图片
 
 	@Column(name = "goods_num")
 	private Integer goodsNum;// 商品数量
