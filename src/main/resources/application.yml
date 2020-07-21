@@ -2,61 +2,66 @@ server:
   port: 8874
 
 spring:
-    application:
-        name: hui_shop
-    jackson:
-        date-format: yyyy-MM-dd HH:mm:ss
-        time-zone: GMT+8
-        default-property-inclusion: NON_NULL
-    datasource:
-        name: test
-        url: jdbc:mysql://localhost:3306/hui_shop?useUnicode=true&characterEncoding=UTF8&serverTimezone=GMT%2B8
-        username: root
-        password: Ahui123321
-        # 使用druid数据源
-        type: com.alibaba.druid.pool.DruidDataSource
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        filters: stat
-        maxActive: 20
-        initialSize: 1
-        maxWait: 60000
-        minIdle: 1
-        timeBetweenEvictionRunsMillis: 60000
-        minEvictableIdleTimeMillis: 300000
-        validationQuery: select 'x'
-        testWhileIdle: true
-        testOnBorrow: false
-        testOnReturn: false
-        poolPreparedStatements: true
-        maxOpenPreparedStatements: 20
-    redis:
-      host: 39.108.98.253
-      port: 6379
-      database: 0
-      timeout: 60s  # 连接超时时间，2.0 中该参数的类型为Duration，这里在配置的时候需要指明单位
-      # 连接池配置，2.0中直接使用jedis或者lettuce配置连接池（使用lettuce，依赖中必须包含commons-pool2包）
-      lettuce:
-        pool:
-          # 最大空闲连接数
-          max-idle: 500
-          # 最小空闲连接数
-          min-idle: 50
-          # 等待可用连接的最大时间，负数为不限制
-          max-wait:  -1s
-          # 最大活跃连接数，负数为不限制
-          max-active: -1
-    sleuth:
-      enabled: true
-      http:
-        legacy:
-          enabled: true
-    cloud:
-      nacos:
-        discovery:
-          server-addr: localhost:8848
-      sentinel:
-        transport:
-          dashboard: localhost:8086
+  application:
+      name: hui_shop
+  jackson:
+      date-format: yyyy-MM-dd HH:mm:ss
+      time-zone: GMT+8
+      default-property-inclusion: NON_NULL
+  datasource:
+      name: test
+      url: jdbc:mysql://localhost:3306/hui_shop?useUnicode=true&characterEncoding=UTF8&serverTimezone=GMT%2B8
+      username: root
+      password: ahui123321
+      # 使用druid数据源
+      type: com.alibaba.druid.pool.DruidDataSource
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      filters: stat
+      maxActive: 20
+      initialSize: 1
+      maxWait: 60000
+      minIdle: 1
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: select 'x'
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      poolPreparedStatements: true
+      maxOpenPreparedStatements: 20
+  redis:
+    host: 39.108.98.253
+    port: 6379
+    database: 0
+    timeout: 60s  # 连接超时时间，2.0 中该参数的类型为Duration，这里在配置的时候需要指明单位
+    # 连接池配置，2.0中直接使用jedis或者lettuce配置连接池（使用lettuce，依赖中必须包含commons-pool2包）
+    lettuce:
+      pool:
+        # 最大空闲连接数
+        max-idle: 500
+        # 最小空闲连接数
+        min-idle: 50
+        # 等待可用连接的最大时间，负数为不限制
+        max-wait:  -1s
+        # 最大活跃连接数，负数为不限制
+        max-active: -1
+  sleuth:
+    enabled: true
+    http:
+      legacy:
+        enabled: true
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+    sentinel:
+      transport:
+        dashboard: localhost:8086
+  resources:
+    static-locations: classpath:/static
+  mvc:
+    static-path-pattern: /**
+
 sample:
   zipkin:
     enabled: false
@@ -75,10 +80,6 @@ logging:
   level:
     com.xph.shop: DEBUG
     
-shop:
-  elasticsearch:
-    hostlist: ${eshostlist:127.0.0.1:9200} #多个结点中间用逗号分隔
-
 shop:
   elasticsearch:
     hostlist: ${eshostlist:127.0.0.1:9200} #多个结点中间用逗号分隔
@@ -132,6 +133,8 @@ management:
 
 upload: 
   file:
-    path: D:\\Java\\workspace_x\\upload\\file
+    path: D:\\Java\workspace_x\\hui_shop\\src\main\\resources\\static\\images
+host:
+  url: http://localhost:8874
 
 

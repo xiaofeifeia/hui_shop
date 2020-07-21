@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -20,6 +21,7 @@ import com.xph.shop.dao.CategoryMapper;
 import com.xph.shop.entity.Category;
 import com.xph.shop.exception.MessageException;
 import com.xph.shop.service.CategoryService;
+import com.xph.shop.vo.CategoryTree;
 import com.xph.shop.vo.CategoryVo;
 import com.xph.shop.vo.Page;
 import com.xph.shop.vo.StatusCode;
@@ -34,6 +36,9 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Autowired
 	private CategoryMapper categoryMapper;
+
+	@Value("${host.url}")
+	private String host;
 
 	/**
 	 * Category条件+分页查询
@@ -66,6 +71,7 @@ public class CategoryServiceImpl implements CategoryService {
 				if (t.getParentId() == 0) {
 					vo.setLevel(1);
 				}
+				vo.setImage(host + vo.getImage());
 				data.add(vo);
 			});
 		}
@@ -227,9 +233,44 @@ public class CategoryServiceImpl implements CategoryService {
 	public List<Category> listByParentId(Integer parentId) {
 		Example example = new Example(Category.class);
 		Example.Criteria criteria = example.createCriteria();
-		criteria.andEqualTo("parentId",parentId).andEqualTo("status", UserStatus.ENABLE.getStatus());
+		criteria.andEqualTo("parentId", parentId).andEqualTo("status",
+				UserStatus.ENABLE.getStatus());
 		example.setOrderByClause("seq, createdate desc,updatedate desc");
 		return categoryMapper.selectByExample(example);
 	}
 
+	@Override
+	public List<CategoryTree> getCategoryTree() {
+		List<Category> parentList = listByParentId(0);
+		List<CategoryTree> tree = new ArrayList<CategoryTree>();
+		for (Category c : parentList) {
+			CategoryTree ct = createCategoryTree(c, 1);
+			tree.add(ct);
+			List<Category> listByParentId = listByParentId(ct.getId());
+			if (listByParentId != null) {
+				for (Category c2 : listByParentId) {
+					CategoryTree ct2 = createCategoryTree(c2, 2);
+					ct.getChildren().add(ct2);
+					List<Category> listByParentId2 = listByParentId(ct2.getId());
+					if (listByParentId2 != null) {
+						for (Category c3 : listByParentId2) {
+							CategoryTree ct3 = createCategoryTree(c3, 3);
+							ct2.getChildren().add(ct3);
+						}
+					}
+				}
+			}
+
+		}
+		return tree;
+	}
+
+	private CategoryTree createCategoryTree(Category c, int level) {
+		CategoryTree ct = new CategoryTree(c);
+		if (org.apache.commons.lang3.StringUtils.isNotBlank(ct.getImage())) {
+			ct.setImage(host + ct.getImage());
+		}
+		ct.setLevel(level);
+		return ct;
+	}
 }

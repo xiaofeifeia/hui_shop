@@ -24,6 +24,8 @@ public class UploadController {
 
 	@Value("${upload.file.path}")
 	private String filePath;
+	
+	private static String path="/images";
 
 	@PostMapping("/upload")
 	public Result upload(@RequestParam("file") MultipartFile file) {
@@ -35,6 +37,7 @@ public class UploadController {
 
 		String fileName = file.getOriginalFilename();
 		String basePath = filePath + "/" + Constants.uuid + "/";
+		String showPath = path + "/" + Constants.uuid + "/";
 		if (!new File(basePath).exists()) {
 			new File(basePath).mkdirs();
 		}
@@ -44,7 +47,7 @@ public class UploadController {
 			log.info("上传成功");
 			JSONObject data = new JSONObject();
 			data.put("name", fileName);
-			data.put("url", basePath + fileName);
+			data.put("url", showPath + fileName);
 			return Result.build(data);
 		} catch (IOException e) {
 			log.error(StatusCode.UPLOAD_FAIL.getMessage(), e);
