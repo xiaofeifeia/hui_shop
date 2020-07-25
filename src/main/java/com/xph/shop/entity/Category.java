@@ -37,8 +37,11 @@ public class Category implements Serializable {
 	@Column(name = "is_show")
 	private Boolean isShow;// 是否显示
 
-	@Column(name = "is_menu")
-	private Boolean isMenu;// 是否导航
+	@Column(name = "is_nav")
+	private Boolean isNav;// 是否导航
+	
+	@Column(name = "is_hot")
+	private Boolean isHot;// 是否热门
 
 	@Column(name = "seq")
 	private Integer seq;// 排序

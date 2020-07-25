@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.pagehelper.PageInfo;
 import com.xph.shop.entity.Banner;
 import com.xph.shop.service.BannerService;
+import com.xph.shop.vo.BannerVo;
 import com.xph.shop.vo.Result;
 
 /**
@@ -38,10 +39,10 @@ public class BannerController {
 	 * @return
 	 */
 	@PostMapping(value = "/findPage/{page}/{size}")
-	public Result findPage(@RequestBody(required = false) Banner banner,
+	public Result findPage(@RequestBody(required = false) BannerVo bannerVo,
 			@PathVariable int page, @PathVariable int size) {
 		// 调用BannerService实现分页条件查询Banner
-		PageInfo<Banner> pageInfo = bannerService.findPage(banner, page, size);
+		PageInfo<Banner> pageInfo = bannerService.findPage(bannerVo, page, size);
 		return Result.build(pageInfo);
 	}
 

@@ -33,6 +33,7 @@ import com.xph.shop.utils.UserUtil;
 import com.xph.shop.vo.Goods;
 import com.xph.shop.vo.GoodsEs;
 import com.xph.shop.vo.IdWorker;
+import com.xph.shop.vo.SkuVo;
 import com.xph.shop.vo.SpuVo;
 import com.xph.shop.vo.StatusCode;
 import com.xph.shop.vo.UserStatus;
@@ -112,13 +113,23 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 
 	@Override
-	public PageInfo<SpuVo> findPage(SpuVo spuVo, int page, int size) {
+	public PageInfo<SpuVo> findSpuPage(SpuVo spuVo, int page, int size) {
 
 		// 分页
 		PageHelper.startPage(page, size);
 
-		List<SpuVo> findPage = goodsMapper.findPage(spuVo);
+		List<SpuVo> findPage = goodsMapper.findSpuPage(spuVo);
 		return new PageInfo<SpuVo>(findPage);
+	}
+
+	@Override
+	public PageInfo<SkuVo> findSkuPage(SkuVo skuVo, int page, int size) {
+
+		// 分页
+		PageHelper.startPage(page, size);
+
+		List<SkuVo> findPage = goodsMapper.findSkuPage(skuVo);
+		return new PageInfo<>(findPage);
 	}
 
 	@Transactional
@@ -174,7 +185,7 @@ public class GoodsServiceImpl implements GoodsService {
 		if (spu == null) {
 			throw new MessageException(StatusCode.SPU_NOT_FOUND);
 		}
-		spu=new Spu();
+		spu = new Spu();
 		spu.setId(id);
 		spu.setAuditStatus(auditStatus);
 		try {
@@ -194,8 +205,7 @@ public class GoodsServiceImpl implements GoodsService {
 			throw new MessageException(StatusCode.SPU_NOT_FOUND);
 		}
 		Example example = new Example(Sku.class);
-		example.createCriteria().andEqualTo("spuId", id)
-				.andNotEqualTo("status", UserStatus.DELETE.getStatus());
+		example.createCriteria().andEqualTo("spuId", id).andNotEqualTo("status", UserStatus.DELETE.getStatus());
 		List<Sku> skus = skuMapper.selectByExample(example);
 		Goods goods = new Goods();
 		goods.setSkus(skus);
@@ -214,16 +224,72 @@ public class GoodsServiceImpl implements GoodsService {
 			spuVo.setCategoryName3(c3.getName());
 		}
 		Brand brand = brandService.findById(spu.getBrandId());
-        spuVo.setBrandName(brand.getName());
+		spuVo.setBrandName(brand.getName());
 		goods.setSpu(spuVo);
 		return goods;
 	}
 
 	@Override
 	public List<GoodsEs> getGoodsList() {
-		
+
 		return goodsMapper.getGoodsList();
 	}
 
-	
+	@Transactional
+	@Override
+	public void setHot(String skuId, boolean isHot) {
+		Sku sku = skuMapper.selectByPrimaryKey(skuId);
+		if (sku == null) {
+			throw new MessageException(StatusCode.SKU_NOT_FOUND);
+		}
+		sku.setIsHot(isHot);
+		sku.setUpdateTime(new Date());
+		skuMapper.updateByPrimaryKeySelective(sku);
+
+	}
+
+	@Override
+	public void setNew(String skuId, boolean isNew) {
+		Sku sku = skuMapper.selectByPrimaryKey(skuId);
+		if (sku == null) {
+			throw new MessageException(StatusCode.SKU_NOT_FOUND);
+		}
+		sku.setIsNew(isNew);
+		sku.setUpdateTime(new Date());
+		skuMapper.updateByPrimaryKeySelective(sku);
+
+	}
+
+	@Override
+	public void setRecommend(String skuId, boolean isRecommend) {
+		Sku sku = skuMapper.selectByPrimaryKey(skuId);
+		if (sku == null) {
+			throw new MessageException(StatusCode.SKU_NOT_FOUND);
+		}
+		sku.setIsRecommend(isRecommend);
+		sku.setUpdateTime(new Date());
+		skuMapper.updateByPrimaryKeySelective(sku);
+	}
+
+	@Override
+	public List<Sku> findHotGoods() {
+		Example example = new Example(Sku.class);
+		example.createCriteria().andEqualTo("isHot", true).andNotEqualTo("status", UserStatus.DELETE.getStatus());
+		return skuMapper.selectByExample(example);
+	}
+
+	@Override
+	public List<Sku> findNewGoods() {
+		Example example = new Example(Sku.class);
+		example.createCriteria().andEqualTo("isNew", true).andNotEqualTo("status", UserStatus.DELETE.getStatus());
+		return skuMapper.selectByExample(example);
+	}
+
+	@Override
+	public List<Sku> findRecommendGoods() {
+		Example example = new Example(Sku.class);
+		example.createCriteria().andEqualTo("isRecommend", true).andNotEqualTo("status", UserStatus.DELETE.getStatus());
+		return skuMapper.selectByExample(example);
+	}
+
 }

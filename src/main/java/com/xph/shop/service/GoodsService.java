@@ -3,8 +3,10 @@ package com.xph.shop.service;
 import java.util.List;
 
 import com.github.pagehelper.PageInfo;
+import com.xph.shop.entity.Sku;
 import com.xph.shop.vo.Goods;
 import com.xph.shop.vo.GoodsEs;
+import com.xph.shop.vo.SkuVo;
 import com.xph.shop.vo.SpuVo;
 
 public interface GoodsService {
@@ -17,6 +19,16 @@ public interface GoodsService {
 	public void createOrUpdate(Goods goods);
 
 	/**
+	 * spu商品信息
+	 * 
+	 * @param skuVo
+	 * @param page
+	 * @param size
+	 * @return
+	 */
+	public PageInfo<SpuVo> findSpuPage(SpuVo spuVo, int page, int size);
+	
+	/**
 	 * sku商品信息
 	 * 
 	 * @param skuVo
@@ -24,7 +36,7 @@ public interface GoodsService {
 	 * @param size
 	 * @return
 	 */
-	public PageInfo<SpuVo> findPage(SpuVo spuVo, int page, int size);
+	public PageInfo<SkuVo> findSkuPage(SkuVo skuVo, int page, int size);
 
 	/**
 	 * 删除
@@ -69,4 +81,31 @@ public interface GoodsService {
 	 * @return
 	 */
 	public List<GoodsEs> getGoodsList();
+
+	/**
+	 * 热门商品
+	 * @param skuId
+	 * @param isHot
+	 */
+	public void setHot(String skuId, boolean isHot);
+	
+	/**
+	 * 新的商品
+	 * @param skuId
+	 * @param isNew
+	 */
+	public void setNew(String skuId, boolean isNew);
+	
+	/**
+	 * 推荐商品
+	 * @param skuId
+	 * @param isRecommend
+	 */
+	public void setRecommend(String skuId, boolean isRecommend);
+	
+	public List<Sku> findHotGoods();
+	
+	public List<Sku> findNewGoods();
+	
+	public List<Sku> findRecommendGoods();
 }

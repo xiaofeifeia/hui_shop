@@ -59,9 +59,11 @@ public interface CategoryService {
 	 */
 	List<Category> findAll();
 
-	void updateIsMenu(Integer id, Boolean isMenu);
+	void updateIsNav(Integer id, Boolean isNav);
 
 	void updateIsShow(Integer id, Boolean isShow);
+
+	void updateIsHot(Integer id, Boolean isHot);
 
 	/**
 	 * 根据父类获取分类
@@ -77,4 +79,18 @@ public interface CategoryService {
 	 * @return
 	 */
 	List<CategoryTree> getCategoryTree();
+
+	/**
+	 * 获取导航栏分类
+	 * 
+	 * @return
+	 */
+	List<Category> findNavCategorys();
+
+	/**
+	 * 获取热门分类
+	 * 
+	 * @return
+	 */
+	List<Category> findHotCategorys();
 }

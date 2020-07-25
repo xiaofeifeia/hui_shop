@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xph.shop.dao.GoodsMapper">
-<select id="findPage" parameterType="com.xph.shop.vo.SpuVo" resultType="com.xph.shop.vo.SpuVo">
+<select id="findSpuPage" parameterType="com.xph.shop.vo.SpuVo" resultType="com.xph.shop.vo.SpuVo">
   select s.id,s.sn,s.is_marketable isMarketable,audit_status auditStatus,s.image,s.name,b.name brandName ,s.sale_num saleNum from tb_spu s
   left join tb_brand b on s.brand_id =b.id
   <where>
@@ -14,6 +14,18 @@
     and s.is_delete ='0'
   </where>
     order by s.createdate desc ,s.updatedate desc
+</select>
+
+<select id="findSkuPage" parameterType="com.xph.shop.vo.SkuVo" resultType="com.xph.shop.vo.SkuVo">
+  select s.id,s.sn,s.price,s.old_price oldPrice,s.is_new isNew,s.is_hot isHot,s.is_recommend isRecommend,s.image,s.name,s.brand_name brandName , p.name spuName,s.sale_num saleNum from tb_sku s
+  left join tb_spu p on s.spu_id=p.id
+  <where>
+    <if test="name!=null and name!=''">
+      and (s.name like '%${name}%' or s.sn like '%${name}%')
+    </if>
+    and s.status!='3'
+  </where>
+    order by s.create_time desc ,s.update_time desc
 </select>
 
 <select id="getGoodsList" resultType="com.xph.shop.vo.GoodsEs">
