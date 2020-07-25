@@ -1,8 +1,9 @@
-/target/
+/target/*
 /src/test/
-/target/classes/
+/target/classes/*
 .idea
 .classpath
 .project
 hui_shop.iml
 .settings
+/target/classes/META-INF/build-info.properties

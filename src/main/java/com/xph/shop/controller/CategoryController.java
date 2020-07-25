@@ -40,8 +40,7 @@ public class CategoryController {
 	 * @return
 	 */
 	@PostMapping(value = "/findPage/{page}/{size}")
-	public Result findPage(@RequestBody(required = false) Category category,
-			@PathVariable int page, @PathVariable int size) {
+	public Result findPage(@RequestBody(required = false) Category category, @PathVariable int page, @PathVariable int size) {
 		// 调用CategoryService实现分页条件查询Category
 		Page<CategoryVo> pageInfo = categoryService.findPage(category, page, size);
 		return Result.build(pageInfo);
@@ -111,26 +110,34 @@ public class CategoryController {
 		List<Category> list = categoryService.findAll();
 		return Result.build(list);
 	}
-	
-	@PostMapping("updateIsMenu/{id}")
-	public Result updateIsMenu(@PathVariable Integer id,@RequestParam Boolean isMenu){
-		categoryService.updateIsMenu(id,isMenu);
+
+	@PostMapping("updateIsNav/{id}")
+	public Result updateIsMenu(@PathVariable Integer id, @RequestParam Boolean isNav) {
+		categoryService.updateIsNav(id, isNav);
 		return Result.success();
 	}
-	
+
 	@PostMapping("updateIsShow/{id}")
-	public Result updateIsShow(@PathVariable Integer id,@RequestParam Boolean isShow){
-		categoryService.updateIsShow(id,isShow);
+	public Result updateIsShow(@PathVariable Integer id, @RequestParam Boolean isShow) {
+		categoryService.updateIsShow(id, isShow);
 		return Result.success();
 	}
+
+	@PostMapping("updateIsHot/{id}")
+	public Result updateIsHot(@PathVariable Integer id, @RequestParam Boolean isHot) {
+		categoryService.updateIsHot(id, isHot);
+		return Result.success();
+	}
+
 	/**
 	 * 根据父类获取分类
+	 * 
 	 * @param parentId
 	 * @return
 	 */
 	@PostMapping("listByParentId/{parentId}")
-	public Result listByParentId(@PathVariable Integer parentId){
-		List<Category> list =categoryService.listByParentId(parentId);
+	public Result listByParentId(@PathVariable Integer parentId) {
+		List<Category> list = categoryService.listByParentId(parentId);
 		return Result.build(list);
 	}
 }

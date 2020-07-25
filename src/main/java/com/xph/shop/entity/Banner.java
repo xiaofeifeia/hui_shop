@@ -1,12 +1,18 @@
 package com.xph.shop.entity;
-import javax.persistence.*;
 import java.io.Serializable;
-import java.lang.String;
-import java.lang.Integer;
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import lombok.Data;
 /**
  * @Author:xph
  * @Description:Banner构建
  */
+@Data
 @Table(name="tb_banner")
 public class Banner implements Serializable{
 
@@ -26,54 +32,8 @@ public class Banner implements Serializable{
 
     @Column(name = "sort")
 	private Integer sort;//
-
-
-
-	//get方法
-	public Integer getId() {
-		return id;
-	}
-
-	//set方法
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	//get方法
-	public String getTitle() {
-		return title;
-	}
-
-	//set方法
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	//get方法
-	public String getUrl() {
-		return url;
-	}
-
-	//set方法
-	public void setUrl(String url) {
-		this.url = url;
-	}
-	//get方法
-	public String getImage() {
-		return image;
-	}
-
-	//set方法
-	public void setImage(String image) {
-		this.image = image;
-	}
-	//get方法
-	public Integer getSort() {
-		return sort;
-	}
-
-	//set方法
-	public void setSort(Integer sort) {
-		this.sort = sort;
-	}
-
+    
+    @Column(name = "type")
+	private Integer type;//类型  0  轮播图，1 new新品  2 recommend推荐  3 hot热门
 
 }

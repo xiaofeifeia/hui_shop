@@ -78,6 +78,14 @@ public class Sku implements Serializable{
 
     @Column(name = "version")
 	private Integer version;//
+    
+    @Column(name = "is_new")
+    private Boolean isNew;
 
+    @Column(name = "is_recommend")
+    private Boolean isRecommend;
+    
+    @Column(name = "is_hot")
+    private Boolean isHot;
 
 }

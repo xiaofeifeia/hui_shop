@@ -58,8 +58,7 @@ public class CategoryServiceImpl implements CategoryService {
 		// 搜索条件构建
 		Example example = createExample(category);
 		List<CategoryVo> data = new ArrayList<>();
-		List<Category> selectByExample = categoryMapper
-				.selectByExample(example);
+		List<Category> selectByExample = categoryMapper.selectByExample(example);
 		PageInfo<Category> pageInfo = new PageInfo<Category>(selectByExample);
 		Page<CategoryVo> pager = new Page<CategoryVo>();
 		pager.setTotal(pageInfo.getTotal());
@@ -107,8 +106,8 @@ public class CategoryServiceImpl implements CategoryService {
 				criteria.andEqualTo("isShow", category.getIsShow());
 			}
 			// 是否导航
-			if (!StringUtils.isEmpty(category.getIsMenu())) {
-				criteria.andEqualTo("isMenu", category.getIsMenu());
+			if (!StringUtils.isEmpty(category.getIsNav())) {
+				criteria.andEqualTo("isNav", category.getIsNav());
 			}
 			// 排序
 			if (!StringUtils.isEmpty(category.getSeq())) {
@@ -131,8 +130,7 @@ public class CategoryServiceImpl implements CategoryService {
 				criteria.andEqualTo("updatedate", category.getUpdatedate());
 			}
 		}
-		criteria.andIn("status", Lists.newArrayList(
-				UserStatus.ENABLE.getStatus(), UserStatus.DISABLE.getStatus()));
+		criteria.andIn("status", Lists.newArrayList(UserStatus.ENABLE.getStatus(), UserStatus.DISABLE.getStatus()));
 		return example;
 	}
 
@@ -199,8 +197,7 @@ public class CategoryServiceImpl implements CategoryService {
 		rootParent.setId(0);
 		rootParent.setName("根分类");
 		list.add(rootParent);
-		List<Category> selectByExample = categoryMapper
-				.selectByExample(createExample);
+		List<Category> selectByExample = categoryMapper.selectByExample(createExample);
 		if (!Collections.isEmpty(selectByExample)) {
 			list.addAll(selectByExample);
 		}
@@ -208,12 +205,12 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public void updateIsMenu(Integer id, Boolean isMenu) {
+	public void updateIsNav(Integer id, Boolean isNav) {
 		Category findById = findById(id);
 		if (findById == null) {
 			throw new MessageException(StatusCode.CATEGORY_NOT_FOUND);
 		}
-		findById.setIsMenu(isMenu);
+		findById.setIsNav(isNav);
 		findById.setUpdatedate(new Date());
 		categoryMapper.updateByPrimaryKeySelective(findById);
 	}
@@ -230,11 +227,21 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
+	public void updateIsHot(Integer id, Boolean isHot) {
+		Category findById = findById(id);
+		if (findById == null) {
+			throw new MessageException(StatusCode.CATEGORY_NOT_FOUND);
+		}
+		findById.setIsHot(isHot);
+		findById.setUpdatedate(new Date());
+		categoryMapper.updateByPrimaryKeySelective(findById);
+	}
+
+	@Override
 	public List<Category> listByParentId(Integer parentId) {
 		Example example = new Example(Category.class);
 		Example.Criteria criteria = example.createCriteria();
-		criteria.andEqualTo("parentId", parentId).andEqualTo("status",
-				UserStatus.ENABLE.getStatus());
+		criteria.andEqualTo("parentId", parentId).andEqualTo("status", UserStatus.ENABLE.getStatus());
 		example.setOrderByClause("seq, createdate desc,updatedate desc");
 		return categoryMapper.selectByExample(example);
 	}
@@ -273,4 +280,21 @@ public class CategoryServiceImpl implements CategoryService {
 		ct.setLevel(level);
 		return ct;
 	}
+
+	@Override
+	public List<Category> findNavCategorys() {
+		Example ex = new Example(Category.class);
+		ex.createCriteria().andEqualTo("isNav", true).andNotEqualTo("status", UserStatus.DELETE.getStatus());
+		ex.setOrderByClause("seq");
+		return categoryMapper.selectByExample(ex);
+	}
+
+	@Override
+	public List<Category> findHotCategorys() {
+		Example ex = new Example(Category.class);
+		ex.createCriteria().andEqualTo("isHot", true).andNotEqualTo("status", UserStatus.DELETE.getStatus());
+		ex.setOrderByClause("seq");
+		return categoryMapper.selectByExample(ex);
+	}
+
 }

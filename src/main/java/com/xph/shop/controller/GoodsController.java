@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
@@ -19,6 +20,7 @@ import com.xph.shop.entity.Spu;
 import com.xph.shop.service.GoodsService;
 import com.xph.shop.vo.Goods;
 import com.xph.shop.vo.Result;
+import com.xph.shop.vo.SkuVo;
 import com.xph.shop.vo.SpuVo;
 
 @RestController
@@ -37,11 +39,25 @@ public class GoodsController {
 	 * @param size
 	 * @return
 	 */
-	@PostMapping(value = "/findPage/{page}/{size}")
-	public Result findPage(@RequestBody(required = false) SpuVo spuVo,
-			@PathVariable int page, @PathVariable int size) {
+	@PostMapping(value = "/findSpuPage/{page}/{size}")
+	public Result findSpuPage(@RequestBody(required = false) SpuVo spuVo, @PathVariable int page, @PathVariable int size) {
 		// 调用CategoryService实现分页条件查询Category
-		PageInfo<SpuVo> pageInfo = goodsService.findPage(spuVo, page, size);
+		PageInfo<SpuVo> pageInfo = goodsService.findSpuPage(spuVo, page, size);
+		return Result.build(pageInfo);
+	}
+
+	/**
+	 * Category分页条件搜索实现
+	 * 
+	 * @param category
+	 * @param page
+	 * @param size
+	 * @return
+	 */
+	@PostMapping(value = "/findSkuPage/{page}/{size}")
+	public Result findSkuPage(@RequestBody(required = false) SkuVo skuVo, @PathVariable int page, @PathVariable int size) {
+		// 调用CategoryService实现分页条件查询Category
+		PageInfo<SkuVo> pageInfo = goodsService.findSkuPage(skuVo, page, size);
 		return Result.build(pageInfo);
 	}
 
@@ -65,8 +81,7 @@ public class GoodsController {
 		JSONArray parseArray = JSON.parseArray(skusStr);
 		if (skus != null && skus.size() > 0) {
 			for (int i = 0; i < skus.size(); i++) {
-				skus.get(i).setSpec(
-						parseArray.getJSONObject(i).getString("spec"));
+				skus.get(i).setSpec(parseArray.getJSONObject(i).getString("spec"));
 			}
 		}
 		Goods goods = new Goods();
@@ -137,5 +152,44 @@ public class GoodsController {
 	public Result getGoodsInfo(@PathVariable String id) {
 		Goods goods = goodsService.getGoodsInfo(id);
 		return Result.build(goods);
+	}
+
+	/**
+	 * 热门商品
+	 * 
+	 * @param id
+	 * @param isHot
+	 * @return
+	 */
+	@PostMapping("setHot/{skuId}")
+	public Result setHot(@PathVariable String skuId, @RequestParam(defaultValue = "false") boolean isHot) {
+		goodsService.setHot(skuId, isHot);
+		return Result.success();
+	}
+
+	/**
+	 * 新的商品
+	 * 
+	 * @param id
+	 * @param isNew
+	 * @return
+	 */
+	@PostMapping("setNew/{skuId}")
+	public Result setNew(@PathVariable String skuId, @RequestParam(defaultValue = "false") boolean isNew) {
+		goodsService.setNew(skuId, isNew);
+		return Result.success();
+	}
+
+	/**
+	 * 新的商品
+	 * 
+	 * @param id
+	 * @param isRecommend
+	 * @return
+	 */
+	@PostMapping("setRecommend/{skuId}")
+	public Result setRecommend(@PathVariable String skuId, @RequestParam(defaultValue = "false") boolean isRecommend) {
+		goodsService.setRecommend(skuId, isRecommend);
+		return Result.success();
 	}
 }
